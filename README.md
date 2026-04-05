@@ -1,4 +1,4 @@
-# 🏋️ Fitness Tracking App – Workout Plan Tree (CRUD)
+### Fitness Tracking App – Workout Plan Tree (CRUD)
 
 A full-featured fitness tracking application that allows users to create, manage, and organize workout plans in a **tree structure**. This project demonstrates CRUD (Create, Read, Update, Delete) operations on hierarchical workout data, making it ideal for structured training programs.
 
