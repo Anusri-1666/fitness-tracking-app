@@ -16,7 +16,6 @@ Node* createNode(char name[], int duration) {
     return newNode;
 }
 
-// Insert workout (BST based on name)
 Node* insert(Node* root, char name[], int duration) {
     if (root == NULL)
         return createNode(name, duration);
@@ -62,7 +61,6 @@ Node* deleteNode(Node* root, char name[]) {
     else if (strcmp(name, root->name) > 0)
         root->right = deleteNode(root->right, name);
     else {
-        // Node found
         if (root->left == NULL) {
             Node* temp = root->right;
             free(root);
