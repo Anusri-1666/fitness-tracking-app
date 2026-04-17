@@ -2,14 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Structure for workout node
 typedef struct Node {
     char name[50];
-    int duration; // in minutes
+    int duration;
     struct Node *left, *right;
 } Node;
 
-// Create new workout node
 Node* createNode(char name[], int duration) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     strcpy(newNode->name, name);
@@ -31,7 +29,6 @@ Node* insert(Node* root, char name[], int duration) {
     return root;
 }
 
-// Display workouts (Inorder)
 void display(Node* root) {
     if (root != NULL) {
         display(root->left);
@@ -40,7 +37,6 @@ void display(Node* root) {
     }
 }
 
-// Search workout
 Node* search(Node* root, char name[]) {
     if (root == NULL || strcmp(root->name, name) == 0)
         return root;
@@ -51,14 +47,12 @@ Node* search(Node* root, char name[]) {
     return search(root->right, name);
 }
 
-// Find minimum node
 Node* findMin(Node* root) {
     while (root->left != NULL)
         root = root->left;
     return root;
 }
 
-// Delete workout
 Node* deleteNode(Node* root, char name[]) {
     if (root == NULL)
         return root;
@@ -88,7 +82,6 @@ Node* deleteNode(Node* root, char name[]) {
     return root;
 }
 
-// Update workout
 void update(Node* root, char name[], int newDuration) {
     Node* node = search(root, name);
     if (node != NULL) {
@@ -99,7 +92,6 @@ void update(Node* root, char name[], int newDuration) {
     }
 }
 
-// Menu
 int main() {
     Node* root = NULL;
     int choice, duration;
