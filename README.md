@@ -1,192 +1,187 @@
-# Fitness Tracking App – Workout Plan Tree (CRUD)
-
-A full-featured fitness tracking application that allows users to create, manage, and organize workout plans in a **tree structure**. This project demonstrates CRUD (Create, Read, Update, Delete) operations on hierarchical workout data, making it ideal for structured training programs.
-
----
-
 ## 📌 Features
 
 * 🌳 **Workout Plan Tree Structure**
 
-  * Organize workouts into categories (e.g., Push / Pull / Legs)
-  * Nested exercises under each plan
-  * Expandable and collapsible tree view
+  * Root node represents the main workout plan
+  * Child nodes represent workout categories (Push / Pull / Legs)
+  * Leaf nodes represent exercises
+  * Supports hierarchical organization using pointers
 
 * ➕ **Create**
 
   * Add new workout plans, sub-plans, and exercises
-  * Attach metadata (sets, reps, duration, notes)
+  * Store details like sets, reps, duration, notes
 
 * 📖 **Read**
 
-  * View structured workout hierarchy
-  * Display detailed exercise information
+  * Display full workout tree (DFS / BFS traversal)
+  * View structured hierarchy clearly
 
 * ✏️ **Update**
 
-  * Edit workout names, structure, and details
-  * Modify sets, reps, and notes dynamically
+  * Modify workout name, sets, reps, and notes
+  * Update any node dynamically
 
 * ❌ **Delete**
 
-  * Remove workouts or entire branches of the tree
-  * Safe deletion with confirmation
+  * Delete a node or entire subtree
+  * Memory deallocation using `free()`
 
-* 💾 **Persistent Storage**
+* 💾 **In-Memory Storage**
 
-  * Store data in database (MongoDB / PostgreSQL / SQLite depending on setup)
-
-* 📊 **Optional Enhancements**
-
-  * Progress tracking
-  * Workout history
-  * User authentication
+  * Data stored using dynamic memory allocation (`malloc`, `free`)
+  * Optional file handling for persistence
 
 ---
 
 ## 🧱 Tech Stack
 
-* **Frontend:** React / Vue / Angular (customizable)
-* **Backend:** Node.js + Express (or any REST framework)
-* **Database:** MongoDB / PostgreSQL / SQLite
-* **State Management:** Redux / Context API (if applicable)
+* **Language:** C
+* **Concepts Used:**
+
+  * Trees (General Tree / N-ary Tree)
+  * Dynamic Memory Allocation
+  * Pointers
+  * Recursion
+  * Structures
 
 ---
 
 ## 📂 Project Structure
 
 ```
-fitness-tracker/
+fitness-tracker-c/
 │
-├── client/                 # Frontend application
-│   ├── components/
-│   ├── pages/
-│   └── services/
-│
-├── server/                 # Backend API
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   └── services/
-│
-├── database/               # Schema / migrations
-│
+├── main.c              # Entry point
+├── tree.c              # Tree operations (CRUD)
+├── tree.h              # Structure definitions
+├── utils.c             # Helper functions
+├── data.txt            # Optional file storage
 └── README.md
 ```
 
 ---
 
-## 🌳 Data Model (Workout Tree Example)
+## 🌳 Data Structure Design
 
-```json
-{
-  "id": "root",
-  "name": "Workout Plan",
-  "children": [
-    {
-      "id": "push-day",
-      "name": "Push Day",
-      "children": [
-        {
-          "id": "bench-press",
-          "type": "exercise",
-          "sets": 4,
-          "reps": 10
-        }
-      ]
-    }
-  ]
-}
+```c
+typedef struct Node {
+    char name[50];
+    int sets;
+    int reps;
+    char type[20]; // "plan" or "exercise"
+    
+    struct Node *child;     // First child
+    struct Node *sibling;   // Next sibling
+} Node;
+```
+
+### 📌 Example Tree Representation
+
+```
+Workout Plan
+│
+├── Push Day
+│   └── Bench Press (4 sets, 10 reps)
+│
+├── Pull Day
+│   └── Pull Ups (3 sets, 8 reps)
+│
+└── Leg Day
+    └── Squats (4 sets, 12 reps)
 ```
 
 ---
 
-## 🔌 API Endpoints
+## 🔌 Core Functions (CRUD)
 
-### Workout Plan CRUD
+### ➕ Create
 
-| Method | Endpoint          | Description               |
-| ------ | ----------------- | ------------------------- |
-| GET    | /api/workouts     | Get all workout plans     |
-| GET    | /api/workouts/:id | Get specific workout node |
-| POST   | /api/workouts     | Create new workout        |
-| PUT    | /api/workouts/:id | Update workout            |
-| DELETE | /api/workouts/:id | Delete workout            |
+```c
+Node* createNode(char name[], char type[], int sets, int reps);
+void addChild(Node* parent, Node* child);
+```
+
+### 📖 Read (Traversal)
+
+```c
+void displayTree(Node* root, int level);
+```
+
+### ✏️ Update
+
+```c
+void updateNode(Node* node, char newName[], int sets, int reps);
+```
+
+### ❌ Delete
+
+```c
+void deleteNode(Node* root, char name[]);
+void freeTree(Node* root);
+```
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Clone the Repository
+### 1. Compile the Program
 
 ```bash
-git clone https://github.com/your-username/fitness-tracker.git
-cd fitness-tracker
+gcc main.c tree.c utils.c -o fitness
 ```
 
-### 2. Install Dependencies
+### 2. Run the Application
 
 ```bash
-# Backend
-cd server
-npm install
-
-# Frontend
-cd ../client
-npm install
-```
-
-### 3. Run the Application
-
-```bash
-# Start backend
-cd server
-npm run dev
-
-# Start frontend
-cd client
-npm start
+./fitness
 ```
 
 ---
 
-## ⚙️ Environment Variables
-
-Create a `.env` file in the server directory:
+## ⚙️ Sample Menu
 
 ```
-PORT=5000
-DATABASE_URL=your_database_url
-JWT_SECRET=your_secret_key
+1. Create Workout Plan
+2. Add Exercise
+3. Display Workouts
+4. Update Exercise
+5. Delete Node
+6. Exit
 ```
 
 ---
 
-## 🧪 Testing
+## 🧪 Example Output
 
-```bash
-npm test
+```
+Workout Plan
+ ├── Push Day
+ │    └── Bench Press (Sets: 4, Reps: 10)
+ ├── Pull Day
+ │    └── Pull Ups (Sets: 3, Reps: 8)
+ └── Leg Day
+      └── Squats (Sets: 4, Reps: 12)
 ```
 
 ---
 
 ## 📈 Future Improvements
 
-* Drag-and-drop tree editing
-* AI-based workout recommendations
-* Integration with wearable devices
-* Mobile app version (React Native / Flutter)
+* File handling for saving/loading workouts
+* Balanced tree or advanced structures
+* Search functionality (DFS/BFS)
+* GUI using C libraries (GTK)
+* Integration with mobile apps
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome!
-
-1. Fork the repo
+1. Fork the repository
 2. Create a feature branch (`git checkout -b feature-name`)
-3. Commit changes (`git commit -m "Add feature"`)
-4. Push to branch (`git push origin feature-name`)
+3. Commit changes
+4. Push to branch
 5. Open a Pull Request
 
 ---
@@ -199,15 +194,15 @@ This project is licensed under the MIT License.
 
 ## 🙌 Acknowledgements
 
-* Open-source fitness APIs
-* Developer community contributions
-* Inspiration from modern fitness tracking apps
+* Data Structures concepts in C
+* Tree traversal algorithms
+* Fitness app inspirations
 
 ---
 
 ## ⭐ Support
 
-If you like this project, please ⭐ the repo and share it!
+If you found this helpful, give it a ⭐ and share!
 
 ---
 
